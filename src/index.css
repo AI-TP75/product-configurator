@@ -1,0 +1,593 @@
+/* ----------------------------------------- */
+/* BASE RESET                                */
+/* ----------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f5f5f7;
+  color: #111827;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ----------------------------------------- */
+/* CONFIGURATOR DARK FIXES (CARDS, TABS…)    */
+/* ----------------------------------------- */
+
+/* Card background for summary / right panel / tool panes */
+.config-card {
+  background: #1e1e1e !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  border-radius: 16px;
+}
+
+/* Summary text */
+.config-card h3,
+.config-card h4,
+.config-card .label {
+  color: #fff !important;
+}
+
+/* Option buttons */
+.option-btn {
+  background: #2a2a2a !important;
+  color: #fff !important;
+  border: 1px solid #444 !important;
+  border-radius: 10px;
+}
+
+.option-btn.selected {
+  background: #3f3f3f !important;
+  border-color: #aaa !important;
+}
+
+/* Tabs */
+.config-tabs button {
+  color: #bbb !important;
+}
+
+.config-tabs .active {
+  color: #fff !important;
+  border-bottom: 2px solid #fff !important;
+}
+
+/* Price text */
+.price-text {
+  color: #fff !important;
+  font-weight: 700;
+}
+
+/* Inputs & textareas */
+/* Inputs & textareas – light, CLAAS-style */
+textarea,
+input {
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+
+/* ----------------------------------------- */
+/* APP SHELL                                 */
+/* ----------------------------------------- */
+
+.app-root {
+  min-height: 100vh;
+  padding: 32px 16px 48px;
+}
+
+/* when App.tsx adds theme-dark / theme-light, these will apply */
+.theme-dark {
+  background: radial-gradient(circle at top, #1e2835 0, #050608 45%, #020203 100%);
+  color: #f5f5f5;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ----------------------------------------- */
+/* TOP HEADER                                */
+/* ----------------------------------------- */
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 24px 24px;
+  border-radius: 18px;
+  background: rgba(4, 4, 6, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  margin-bottom: 28px;
+  backdrop-filter: blur(18px);
+}
+
+.app-title {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: 0.03em;
+}
+
+.app-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #aeb3be;
+}
+
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* theme toggle pill */
+.theme-toggle {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(10, 10, 14, 0.9);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.theme-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* workspace badge */
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 8px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at 0%,
+    #00e676 0,
+    #00bfa5 40%,
+    #1c1c20 90%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 26px rgba(0, 191, 165, 0.6);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.app-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #e8f5e9;
+}
+
+.app-badge-label {
+  color: #03120b;
+  font-weight: 600;
+}
+
+/* ----------------------------------------- */
+/* FAMILY OVERVIEW                           */
+/* ----------------------------------------- */
+
+.overview-main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.family-section {
+  border-radius: 18px;
+  background: rgba(10, 10, 14, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.8);
+  padding: 18px 20px 20px;
+}
+
+.family-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.family-name {
+  margin: 0 0 4px;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+}
+
+.family-description {
+  margin: 0;
+  font-size: 12px;
+  color: #aeb3be;
+}
+
+.family-hero {
+  min-width: 240px;
+  text-align: right;
+}
+
+.family-hero-tag {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #00e5ff, #82b1ff);
+  color: #021118;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.family-hero-sub {
+  font-size: 11px;
+  color: #c7ccd7;
+}
+
+/* ----------------------------------------- */
+/* MODEL TABLE                               */
+/* ----------------------------------------- */
+
+.models-table {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(6, 6, 10, 0.95);
+}
+
+.models-header-row,
+.models-row {
+  display: grid;
+  grid-template-columns: 3fr 3fr 2fr auto;
+  column-gap: 16px;
+  align-items: center;
+}
+
+.models-header-row {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #d4d7e2;
+  font-weight: 600;
+}
+
+.models-row {
+  font-size: 13px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
+  transition: background 120ms ease;
+}
+
+.models-row:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.models-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.models-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.models-model-name {
+  font-weight: 500;
+}
+
+.models-subtitle-cell span {
+  font-size: 12px;
+  color: #bbc4d1;
+}
+
+.models-price-cell {
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+.models-cta-cell {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* configure pill */
+.configure-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #00e676, #00bfa5);
+  color: #042218;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 191, 165, 0.55);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+.configure-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0, 191, 165, 0.75);
+  filter: brightness(1.03);
+}
+
+.configure-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 7px 18px rgba(0, 191, 165, 0.55);
+}
+
+/* ----------------------------------------- */
+/* DETAIL / CONFIGURATOR WRAPPER             */
+/* ----------------------------------------- */
+
+.detail-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.back-button {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(7, 7, 11, 0.9);
+  color: #e0e0e0;
+  font-size: 12px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.detail-model-chip {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #82b1ff, #536dfe);
+  color: #020616;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.detail-section {
+  border-radius: 18px;
+  background: rgba(10, 10, 14, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.8);
+  padding: 18px 20px 22px;
+  margin-top: 8px;
+}
+
+/* ----------------------------------------- */
+/* RESPONSIVE                               */
+/* ----------------------------------------- */
+
+@media (max-width: 900px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .family-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .family-hero {
+    text-align: left;
+  }
+
+  .models-header-row,
+  .models-row {
+    grid-template-columns: 3fr 0fr 2fr auto;
+  }
+
+  .models-subtitle-cell {
+    display: none;
+  }
+
+  .detail-section {
+    padding: 14px 14px 18px;
+  }
+}
+
+/* ----------------------------------------- */
+/* LIGHT THEME OVERRIDES                     */
+/* ----------------------------------------- */
+
+.theme-light {
+  background: #f5f5f7;
+  color: #111827;
+}
+
+.theme-light body {
+  background: #f5f5f7;
+}
+
+.theme-light .app-header {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.theme-light .app-title {
+  color: #111827;
+}
+
+.theme-light .app-subtitle {
+  color: #4b5563;
+}
+
+.theme-light .family-section,
+.theme-light .detail-section {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.theme-light .family-description,
+.theme-light .family-hero-sub {
+  color: #4b5563;
+}
+
+.theme-light .models-table {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.theme-light .models-header-row {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.theme-light .models-row:nth-child(odd) {
+  background: #f9fafb;
+}
+
+.theme-light .models-row:nth-child(even) {
+  background: #f3f4f6;
+}
+
+.theme-light .models-row:hover {
+  background: #e5f0ff;
+}
+
+.theme-light .back-button {
+  background: #f9fafb;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.theme-light .detail-model-chip {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #f9fafb;
+}
+
+.theme-light .theme-toggle {
+  background: #f3f4f6;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.theme-light textarea,
+.theme-light input {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+/* LIGHT THEME: configurator cards, options, tabs, price */
+
+.theme-light .config-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+.theme-light .config-card h3,
+.theme-light .config-card h4,
+.theme-light .config-card .label {
+  color: #111827 !important;
+}
+
+/* Option buttons in light mode */
+.theme-light .option-btn {
+  background: #f9fafb !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+.theme-light .option-btn.selected {
+  background: #e5f0ff !important;
+  border-color: #3b82f6 !important;
+  color: #111827 !important;
+}
+
+/* Tabs in light mode */
+.theme-light .config-tabs button {
+  color: #6b7280 !important;
+}
+
+.theme-light .config-tabs .active {
+  color: #111827 !important;
+  border-bottom: 2px solid #111827 !important;
+}
+
+/* Price text in light mode */
+.theme-light .price-text {
+  color: #111827 !important;
+}
+
+/* Textareas & inputs in light mode (overrides earlier dark styles) */
+.theme-light textarea,
+.theme-light input {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+
+/* Fix tab wrapping + space */
+.config-tabs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  border-bottom:1px solid #ddd;
+  padding-bottom:6px;
+}
+
+/* Reduce big image height */
+.config-image-block {
+  max-height:220px;
+}
+
+/* Scroll panel for large option list */
+.config-option-list {
+  max-height:400px;
+  overflow-y:auto;
+  padding-right:6px;
+  scrollbar-width:thin;
+}
+

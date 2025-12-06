@@ -1,0 +1,49 @@
+.
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+│   ├── images
+│   │   ├── demo
+│   │   │   ├── drone-base.png
+│   │   │   ├── harvester-base.png
+│   │   │   ├── pickup-base.png
+│   │   │   └── tractor-base.png
+│   │   ├── families
+│   │   │   ├── front-hopper.png
+│   │   │   ├── precision-planters.png
+│   │   │   ├── seed-drills.png
+│   │   │   └── spreaders.png
+│   │   └── jaguar
+│   │       ├── base.png
+│   │       ├── orbis-10500.png
+│   │       └── orbis-9000.png
+│   └── vite.svg
+├── README.md
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── FamilyLanding.tsx
+│   │   ├── ProductConfigurator.tsx
+│   │   └── ProductFamilyOverview.tsx
+│   ├── data
+│   │   ├── demoCombines.ts
+│   │   ├── jaguar1200.ts
+│   │   ├── precisionTv300.ts
+│   │   ├── precisionTv300Specs.ts
+│   │   ├── productFamilies.ts
+│   │   └── products.ts
+│   ├── index.css
+│   ├── main.tsx
+│   └── types
+├── structure.txt
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+11 directories, 36 files
