@@ -8,6 +8,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "frame-drives",
     label: "Frame & drives",
+    selectionMode: "single",
     options: [
       {
         id: "frame-hydraulic-turbine",
@@ -46,6 +47,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "row-units-downforce",
     label: "Row units & downforce",
+    selectionMode: "single",
     options: [
       {
         id: "downforce-mech-standard",
@@ -78,6 +80,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "depth-control-wheels",
     label: "Depth control wheels",
+    selectionMode: "single",
     options: [
       {
         id: "depth-narrow-400-65",
@@ -106,10 +109,11 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
     ]
   },
 
-  // 4. Closing wheels (long CLAAS-style list)
+  // 4. Closing wheels
   {
     id: "closing-wheels",
     label: "Closing wheels",
+    selectionMode: "single",
     options: [
       {
         id: "closing-dual-2in-standard",
@@ -167,6 +171,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "row-cleaners-extras",
     label: "Row cleaners / extras",
+    selectionMode: "single",
     options: [
       {
         id: "row-cleaner-floating",
@@ -199,6 +204,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "seed-hopper-discharge",
     label: "Seed hopper / discharge",
+    selectionMode: "single",
     options: [
       {
         id: "seed-70l-standard",
@@ -225,6 +231,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "front-hopper-hydraulics",
     label: "Front hopper & hydraulics",
+    selectionMode: "single",
     options: [
       {
         id: "front-hopper-1200l",
@@ -251,6 +258,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "fertiliser-system",
     label: "Fertiliser system",
+    selectionMode: "single",
     options: [
       {
         id: "fert-basic-800l",
@@ -277,6 +285,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "microgranular",
     label: "Microgranular",
+    selectionMode: "single",
     options: [
       {
         id: "micro-front-hopper",
@@ -297,6 +306,7 @@ export const precisionTv300OptionGroups: OptionGroup[] = [
   {
     id: "row-markers",
     label: "Row markers",
+    selectionMode: "single",
     options: [
       {
         id: "row-markers-hydraulic",

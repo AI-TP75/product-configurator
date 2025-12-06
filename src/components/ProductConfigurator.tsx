@@ -1,11 +1,7 @@
 // src/components/ProductConfigurator.tsx
-import React, {
-  FC,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { FC } from "react";
+
 import type { ProductConfig } from "../data/jaguar1200";
 
 interface Props {

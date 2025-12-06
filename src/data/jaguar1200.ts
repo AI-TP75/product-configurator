@@ -11,7 +11,7 @@ export interface Option {
 export interface OptionGroup {
   id: string;
   label: string;
-  selectionMode: "single" | "multi";
+  selectionMode?: "single" | "multi";   // NOW OPTIONAL
   options: Option[];
 }
 
