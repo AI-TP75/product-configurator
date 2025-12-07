@@ -887,14 +887,12 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         </div>
 
         {/* Selected configuration */}
-        {/* Selected configuration */}
         <div
           style={{
             borderRadius: 18,
             padding: 16,
             background: "#ffffff",
-            border: "1px solid #e4e4e4",
-            // no maxHeight, no overflow → everything visible
+            border: "1px solid #e4e4e4"
           }}
         >
           <div
@@ -906,13 +904,15 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
           >
             Selected configuration
           </div>
-          <ul
+
+          {/* 2-column grid so label + value never overlap */}
+          <div
             style={{
-              listStyle: "none",
-              padding: 0,
-              margin: 0,
               fontSize: 12,
-              lineHeight: 1.7
+              lineHeight: "18px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 6
             }}
           >
             {product.optionGroups.map((group) => {
@@ -921,32 +921,40 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 return o.id === optId;
               });
               if (!opt) return null;
+
               return (
-                <li
+                <div
                   key={group.id}
                   style={{
-                    marginBottom: 6,
-                    display: "flex",
-                    gap: 6
+                    display: "grid",
+                    gridTemplateColumns: "170px minmax(0, 1fr)", // label column + flexible value
+                    columnGap: 8,
+                    rowGap: 2
                   }}
                 >
                   <span
                     style={{
                       fontWeight: 600,
-                      color: "#444",
-                      minWidth: 130
+                      color: "#444"
                     }}
                   >
                     {group.label}:
                   </span>
-                  <span style={{ color: "#111" }}>{opt.label}</span>
-                </li>
+                  <span
+                    style={{
+                      color: "#111"
+                    }}
+                  >
+                    {opt.label}
+                  </span>
+                </div>
               );
             })}
-          </ul>
+          </div>
         </div>
 
-        {/* Load from code */}
+        
+       
         {/* Load from code */}
         <div
           style={{
