@@ -34,7 +34,7 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
             letterSpacing: 0.02
           }}
         >
-          The product configurator.
+          The Machine Configurator
         </h1>
         <p
           style={{
@@ -91,25 +91,31 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
                   justifyContent: "center"
                 }}
               >
+                
                 <img
-                  src={family.image}
-                  alt={family.label}
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                    objectFit: "contain",
-                    filter: isEnabled ? "none" : "grayscale(0.9)",
-                    opacity: isEnabled ? 1 : 0.45,
-                    transition: "transform 140ms ease, opacity 140ms ease"
-                  }}
-                  onMouseOver={(e) => {
-                    if (!isEnabled) return;
-                    e.currentTarget.style.transform = "translateY(-4px)";
-                  }}
-                  onMouseOut={(e) => {
-                    if (!isEnabled) return;
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
+                    src={family.image}
+                    alt={family.label}
+                    style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                        // always colour – no grayscale
+                        filter: "none",
+                        // dim only if disabled
+                        opacity: isEnabled ? 1 : 0.55,
+                        // default position
+                        transform: "translateY(0)",
+                        // 🔥 single transition property
+                        transition: "transform 140ms ease, opacity 140ms ease"
+                    }}
+                    onMouseOver={(e) => {
+                        if (!isEnabled) return;
+                        e.currentTarget.style.transform = "translateY(-4px)";
+                    }}
+                    onMouseOut={(e) => {
+                        if (!isEnabled) return;
+                        e.currentTarget.style.transform = "translateY(0)";
+                    }}
                 />
               </div>
 
