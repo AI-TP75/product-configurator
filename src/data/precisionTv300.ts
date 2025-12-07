@@ -3,7 +3,7 @@ import { jaguar1200, type ProductConfig } from "./jaguar1200";
 import { tv300HeadlineSpecs } from "./precisionTv300Specs";
 
 /**
- * MONOSEM TV 300 precision planters.
+ * TV 300 precision planters.
  *
  * We reuse jaguar1200 as a visual/template base and override:
  * - id, name, subtitle, basePrice

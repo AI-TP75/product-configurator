@@ -34,7 +34,7 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
             letterSpacing: 0.02
           }}
         >
-          The MONOSEM product configurator.
+          The product configurator.
         </h1>
         <p
           style={{
