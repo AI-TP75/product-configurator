@@ -7,18 +7,18 @@ interface Props {
   onSelectProduct: (id: string) => void;
 }
 
+// simple helper to format EUR with symbol BEFORE the amount, e.g. "€ 31.706"
+const formatEuro = (amount: number) =>
+  `€ ${amount.toLocaleString("de-DE", {
+    maximumFractionDigits: 0,
+  })}`;
+
 /**
  * Step 2: choose a model within the selected family.
- *
- * CLAAS-style:
- * - Light background (handled by App)
- * - Big product images
- * - Model name + 1–2 spec lines
- * - "Configure" call-to-action on the right
  */
 export const ProductFamilyOverview: FC<Props> = ({
   products,
-  onSelectProduct
+  onSelectProduct,
 }) => {
   if (!products || products.length === 0) {
     return (
@@ -27,7 +27,7 @@ export const ProductFamilyOverview: FC<Props> = ({
           padding: "48px 0",
           textAlign: "center",
           color: "#666",
-          fontSize: 14
+          fontSize: 14,
         }}
       >
         No models available in this family yet.
@@ -44,7 +44,7 @@ export const ProductFamilyOverview: FC<Props> = ({
         style={{
           marginBottom: 24,
           borderBottom: "1px solid #e5e5e5",
-          paddingBottom: 12
+          paddingBottom: 12,
         }}
       >
         <div
@@ -53,7 +53,7 @@ export const ProductFamilyOverview: FC<Props> = ({
             letterSpacing: 1.5,
             textTransform: "uppercase",
             color: "#999",
-            marginBottom: 4
+            marginBottom: 4,
           }}
         >
           {familyName}
@@ -63,7 +63,7 @@ export const ProductFamilyOverview: FC<Props> = ({
             fontSize: 22,
             fontWeight: 600,
             margin: 0,
-            color: "#111"
+            color: "#111",
           }}
         >
           Select a model
@@ -73,7 +73,7 @@ export const ProductFamilyOverview: FC<Props> = ({
             marginTop: 6,
             marginBottom: 0,
             fontSize: 13,
-            color: "#666"
+            color: "#666",
           }}
         >
           Choose the machine that matches your rows, spacing and hopper
@@ -86,11 +86,10 @@ export const ProductFamilyOverview: FC<Props> = ({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 20
+          gap: 20,
         }}
       >
         {products.map((p) => {
-          // tolerate both headlineSpecs shapes
           const hs: any = p.headlineSpecs || {};
           const rows =
             hs.rows ??
@@ -113,7 +112,7 @@ export const ProductFamilyOverview: FC<Props> = ({
                 rowGap: 12,
                 alignItems: "center",
                 padding: "18px 8px",
-                borderBottom: "1px solid #eee"
+                borderBottom: "1px solid #eee",
               }}
             >
               {/* Image */}
@@ -121,7 +120,7 @@ export const ProductFamilyOverview: FC<Props> = ({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-start"
+                  justifyContent: "flex-start",
                 }}
               >
                 <div
@@ -130,7 +129,7 @@ export const ProductFamilyOverview: FC<Props> = ({
                     height: 140,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                 >
                   <img
@@ -139,7 +138,7 @@ export const ProductFamilyOverview: FC<Props> = ({
                     style={{
                       maxWidth: "100%",
                       maxHeight: "100%",
-                      objectFit: "contain"
+                      objectFit: "contain",
                     }}
                   />
                 </div>
@@ -150,14 +149,14 @@ export const ProductFamilyOverview: FC<Props> = ({
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: 4
+                  gap: 4,
                 }}
               >
                 <div
                   style={{
                     fontSize: 16,
                     fontWeight: 500,
-                    color: "#111"
+                    color: "#111",
                   }}
                 >
                   {p.name}
@@ -167,7 +166,7 @@ export const ProductFamilyOverview: FC<Props> = ({
                     style={{
                       fontSize: 12,
                       color: "#777",
-                      marginBottom: 2
+                      marginBottom: 2,
                     }}
                   >
                     {p.subtitle}
@@ -180,7 +179,7 @@ export const ProductFamilyOverview: FC<Props> = ({
                     flexWrap: "wrap",
                     gap: 12,
                     fontSize: 12,
-                    color: "#555"
+                    color: "#555",
                   }}
                 >
                   {rows && <span>{rows}</span>}
@@ -196,9 +195,18 @@ export const ProductFamilyOverview: FC<Props> = ({
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-end",
-                  gap: 8
+                  gap: 6,
                 }}
               >
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: "#555",
+                    fontWeight: 500, // slightly stronger so price reads clearly
+                  }}
+                >
+                  From {formatEuro(p.basePrice)}
+                </div>
                 <button
                   type="button"
                   onClick={() => onSelectProduct(p.id)}
@@ -211,12 +219,11 @@ export const ProductFamilyOverview: FC<Props> = ({
                     fontSize: 13,
                     fontWeight: 500,
                     cursor: "pointer",
-                    boxShadow: "0 8px 18px rgba(0,0,0,0.08)"
+                    boxShadow: "0 8px 18px rgba(0,0,0,0.08)",
                   }}
                 >
                   Configure
                 </button>
-                {/* Future place for “from €xx,xxx” or power band */}
               </div>
             </div>
           );

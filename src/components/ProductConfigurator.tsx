@@ -8,9 +8,52 @@ interface Props {
   product: ProductConfig;
 }
 
+// helper for Euro formatting: "€ 31.706"
+const formatEuro = (amount: number) =>
+  `€ ${amount.toLocaleString("de-DE", {
+    maximumFractionDigits: 0,
+  })}`;
+
+// helper to choose thumbnail image per option group
+const getGroupThumbnail = (groupLabel: string): string | null => {
+  const l = groupLabel.toLowerCase();
+
+  // Row units & downforce → row unit.webp
+  if (l.includes("row units") && l.includes("downforce")) {
+    return "/images/tv300/row unit.webp";
+  }
+
+  // Depth control wheels → depth control wheel.jpeg
+  if (l.includes("depth control")) {
+    return "/images/tv300/depth control wheel.jpeg";
+  }
+
+  // Closing wheels → closing wheels.webp
+  if (l.includes("closing wheels")) {
+    return "/images/tv300/closing wheels.webp";
+  }
+
+  // Row cleaners / extras → row cleaners.webp
+  if (l.includes("row cleaners") || l.includes("extras")) {
+    return "/images/tv300/row cleaners.webp";
+  }
+
+  // Seed hopper / discharge → seed hopper.jpg
+  if (l.includes("seed hopper") || l.includes("discharge")) {
+    return "/images/tv300/seed hopper.jpg";
+  }
+
+  // Row markers → row markers.jpeg
+  if (l.includes("row markers")) {
+    return "/images/tv300/row markers.jpeg";
+  }
+
+  return null;
+};
+
 export const ProductConfigurator: FC<Props> = ({ product }) => {
   const [activeGroupId, setActiveGroupId] = useState(
-    product.optionGroups[0] ? product.optionGroups[0].id : ""
+    product.optionGroups[0] ? product.optionGroups[0].id : "",
   );
 
   // selected option per group (by id)
@@ -33,7 +76,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
   // horizontal scroll ref for the tabs row
   const tabsRef = useRef<HTMLDivElement | null>(null);
 
-  // one DOM ref per option group so we can scroll to it (CLAAS style)
+  // one DOM ref per option group so we can scroll to it
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Load saved selections from localStorage on mount / when product changes
@@ -136,9 +179,9 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
           groupId: groupId,
           groupLabel: group ? group.label : "",
           optionId: optionId,
-          optionLabel: option ? option.label : ""
+          optionLabel: option ? option.label : "",
         };
-      })
+      }),
     };
   };
 
@@ -198,7 +241,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         setLoadError(
           "This code belongs to another model (" +
             otherName +
-            "). Switch to that model first."
+            "). Switch to that model first.",
         );
         return;
       }
@@ -227,12 +270,12 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
       setShareCode(null);
     } catch {
       setLoadError(
-        "Could not read this code. It may be corrupted or from another system."
+        "Could not read this code. It may be corrupted or from another system.",
       );
     }
   };
 
-  // ---------- Create PDF summary (opens print dialog → Save as PDF) ----------
+  // ---------- Create PDF summary (with image + price breakdown) ----------
 
   const handleCreatePdf = () => {
     if (typeof window === "undefined") return;
@@ -249,7 +292,10 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         );
       })
       .join("");
-    const priceStr = cfg.totalPrice.toLocaleString("en-IN");
+
+    const totalStr = formatEuro(totalPrice);
+    const baseStr = formatEuro(product.basePrice);
+    const optionsStr = formatEuro(optionsTotal);
 
     const win = window.open("", "_blank");
     if (!win) return;
@@ -262,16 +308,38 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         "</title>" +
         "</head>" +
         '<body style="font-family: -apple-system, system-ui, sans-serif; padding: 24px; color: #111;">' +
+        "<div style='display:flex; justify-content:space-between; align-items:flex-start; gap:16px;'>" +
+        "<div>" +
         '<h1 style="margin-bottom: 4px;">' +
         cfg.productName +
         "</h1>" +
         '<p style="margin-top: 0; color: #555;">Generated configuration summary</p>' +
-        '<h2 style="margin-top: 24px;">Price</h2>' +
-        '<p style="font-size: 20px; font-weight: 700;">₹' +
-        priceStr +
-        "</p>" +
+        "</div>" +
+        "<div style='width:220px; height:140px; border-radius:12px; overflow:hidden; background:#f3f3f3; border:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center;'>" +
+        "<img src='" +
+        mainImage +
+        "' alt='" +
+        cfg.productName +
+        "' style='width:100%; height:100%; object-fit:cover;' />" +
+        "</div>" +
+        "</div>" +
+        '<h2 style="margin-top: 24px;">Price breakdown</h2>' +
+        "<table style='border-collapse:collapse; font-size:14px;'>" +
+        "<tbody>" +
+        // order: Total, Base, Optional (like live price)
+        "<tr><td style='padding:4px 12px 4px 0; font-weight:600;'>Total list price</td><td style='padding:4px 0; font-weight:700; color:#0b5b1e;'>" +
+        totalStr +
+        "</td></tr>" +
+        "<tr><td style='padding:4px 12px 4px 0; color:#555;'>Base machine</td><td style='padding:4px 0; font-weight:500;'>" +
+        baseStr +
+        "</td></tr>" +
+        "<tr><td style='padding:4px 12px 4px 0; color:#555;'>Optional equipment</td><td style='padding:4px 0; font-weight:500;'>" +
+        optionsStr +
+        "</td></tr>" +
+        "</tbody>" +
+        "</table>" +
         '<h2 style="margin-top: 24px;">Selected configuration</h2>' +
-        '<ul style="line-height: 1.6;">' +
+        '<ul style="line-height: 1.6; padding-left:18px;">' +
         selectionsHtml +
         "</ul>" +
         '<p style="margin-top: 32px; font-size: 12px; color: #777;">' +
@@ -282,7 +350,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         "window.onload = function () { window.print(); }" +
         "</script>" +
         "</body>" +
-        "</html>"
+        "</html>",
     );
     win.document.close();
   };
@@ -313,7 +381,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         gridTemplateColumns: "minmax(0, 2.5fr) minmax(320px, 1.4fr)",
         gap: 24,
         alignItems: "flex-start",
-        color: "#111"
+        color: "#111",
       }}
     >
       {/* LEFT: image + tabs + options */}
@@ -330,7 +398,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
             display: "grid",
             gridTemplateColumns: "minmax(280px, 1.5fr) minmax(220px, 1fr)",
             gap: 16,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <div
@@ -341,7 +409,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               height: 210,
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <img
@@ -350,7 +418,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               style={{
                 maxHeight: "100%",
                 maxWidth: "100%",
-                objectFit: "contain"
+                objectFit: "contain",
               }}
             />
           </div>
@@ -361,7 +429,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 fontSize: 11,
                 textTransform: "uppercase",
                 letterSpacing: 1.2,
-                color: "#999"
+                color: "#999",
               }}
             >
               Precision planters
@@ -369,7 +437,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
             <div
               style={{
                 fontSize: 20,
-                fontWeight: 600
+                fontWeight: 600,
               }}
             >
               {product.name}
@@ -383,7 +451,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                   color: "#666",
                   display: "flex",
                   flexDirection: "column",
-                  gap: 2
+                  gap: 2,
                 }}
               >
                 {product.headlineSpecs.rows && (
@@ -413,7 +481,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: 2,
-                maxWidth: 260
+                maxWidth: 260,
               }}
             >
               <div
@@ -421,18 +489,18 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                   fontSize: 11,
                   textTransform: "uppercase",
                   letterSpacing: 1,
-                  opacity: 0.85
+                  opacity: 0.85,
                 }}
               >
                 Live list price (demo)
               </div>
               <div style={{ fontSize: 22, fontWeight: 700 }}>
-                ₹{totalPrice.toLocaleString("en-IN")}
+                € {totalPrice.toLocaleString("de-DE")}
               </div>
               <div style={{ fontSize: 11, opacity: 0.9, whiteSpace: "pre-wrap" }}>
-                Base machine: ₹{product.basePrice.toLocaleString("en-IN")}
+                Base machine: {formatEuro(product.basePrice)}
                 {"\n"}
-                Optional equipment: ₹{optionsTotal.toLocaleString("en-IN")}
+                Optional equipment: {formatEuro(optionsTotal)}
               </div>
             </div>
           </div>
@@ -442,7 +510,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         <div
           style={{
             position: "relative",
-            marginBottom: 10
+            marginBottom: 10,
           }}
         >
           {/* gradient masks */}
@@ -455,7 +523,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               width: 24,
               pointerEvents: "none",
               background:
-                "linear-gradient(90deg, rgba(245,245,245,1) 0%, rgba(245,245,245,0) 100%)"
+                "linear-gradient(90deg, rgba(245,245,245,1) 0%, rgba(245,245,245,0) 100%)",
             }}
           />
           <div
@@ -467,7 +535,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               width: 24,
               pointerEvents: "none",
               background:
-                "linear-gradient(270deg, rgba(245,245,245,1) 0%, rgba(245,245,245,0) 100%)"
+                "linear-gradient(270deg, rgba(245,245,245,1) 0%, rgba(245,245,245,0) 100%)",
             }}
           />
 
@@ -490,7 +558,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             ‹
@@ -513,7 +581,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             ›
@@ -528,7 +596,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               padding: "0 32px",
               display: "flex",
               gap: 18,
-              borderBottom: "1px solid #e0e0e0"
+              borderBottom: "1px solid #e0e0e0",
             }}
           >
             {product.optionGroups.map((group) => {
@@ -548,7 +616,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                     borderBottom: isActive
                       ? "2px solid #0b5b1e"
                       : "2px solid transparent",
-                    fontWeight: isActive ? 600 : 400
+                    fontWeight: isActive ? 600 : 400,
                   }}
                 >
                   {group.label}
@@ -564,7 +632,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
             display: "flex",
             flexDirection: "column",
             gap: 16,
-            paddingBottom: 32
+            paddingBottom: 32,
           }}
         >
           {product.optionGroups.map((group) => (
@@ -584,7 +652,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                   activeGroupId === group.id
                     ? "1px solid rgba(11,91,30,0.4)"
                     : "1px solid #e3e3e3",
-                overflow: "hidden"
+                overflow: "hidden",
               }}
             >
               {/* Group header */}
@@ -595,7 +663,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                   fontSize: 13,
                   fontWeight: 600,
                   background:
-                    activeGroupId === group.id ? "#f3fbf4" : "#fafafa"
+                    activeGroupId === group.id ? "#f3fbf4" : "#fafafa",
                 }}
               >
                 {group.label}
@@ -607,24 +675,24 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                   display: "flex",
                   flexDirection: "column",
                   gap: 8,
-                  padding: 10
+                  padding: 10,
                 }}
               >
                 {group.options.map((opt) => {
                   const isSelected = selected[group.id] === opt.id;
 
+                  // group-based thumbnails first, then any specific override, then base image
+                  const groupThumb = getGroupThumbnail(group.label);
                   const thumbnail =
-                    opt.imageOverrides && opt.imageOverrides.main
-                      ? opt.imageOverrides.main
-                      : product.imageBase;
+                    groupThumb ||
+                    (opt.imageOverrides && opt.imageOverrides.main) ||
+                    product.imageBase;
 
                   const isStandard = opt.priceDelta === 0;
 
                   const priceText = isStandard
                     ? "Included"
-                    : opt.priceDelta > 0
-                    ? "₹" + opt.priceDelta.toLocaleString("en-IN")
-                    : "₹" + opt.priceDelta.toLocaleString("en-IN");
+                    : formatEuro(opt.priceDelta);
 
                   return (
                     <button
@@ -647,7 +715,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                           ? "0 10px 22px rgba(76,175,80,0.22)"
                           : "0 4px 12px rgba(0,0,0,0.03)",
                         transition:
-                          "background 120ms ease, box-shadow 120ms ease, border 120ms ease"
+                          "background 120ms ease, box-shadow 120ms ease, border 120ms ease",
                       }}
                     >
                       <div
@@ -655,7 +723,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                           display: "flex",
                           alignItems: "center",
                           gap: 12,
-                          flex: 1
+                          flex: 1,
                         }}
                       >
                         <div
@@ -666,7 +734,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                             overflow: "hidden",
                             background: "#f3f3f3",
                             border: "1px solid #e0e0e0",
-                            flexShrink: 0
+                            flexShrink: 0,
                           }}
                         >
                           <img
@@ -675,14 +743,14 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                             style={{
                               width: "100%",
                               height: "100%",
-                              objectFit: "cover"
+                              objectFit: "cover",
                             }}
                           />
                         </div>
                         <div
                           style={{
                             display: "flex",
-                            flexDirection: "column"
+                            flexDirection: "column",
                           }}
                         >
                           <span style={{ fontSize: 13, fontWeight: 500 }}>
@@ -692,7 +760,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                             style={{
                               fontSize: 11,
                               color: "#888",
-                              marginTop: 2
+                              marginTop: 2,
                             }}
                           >
                             Configures the {group.label.toLowerCase()}.
@@ -707,7 +775,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                                 borderRadius: 999,
                                 background: "#e1f8ea",
                                 color: "#2e7d32",
-                                border: "1px solid #a5d6a7"
+                                border: "1px solid #a5d6a7",
                               }}
                             >
                               Standard
@@ -720,7 +788,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                           fontSize: 11,
                           color: isStandard ? "#999" : "#111",
                           marginLeft: 12,
-                          flexShrink: 0
+                          flexShrink: 0,
                         }}
                       >
                         {priceText}
@@ -739,7 +807,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 14
+          gap: 14,
         }}
       >
         {/* Price / summary card */}
@@ -749,7 +817,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
             padding: 16,
             background: "#ffffff",
             border: "1px solid #e4e4e4",
-            boxShadow: "0 14px 35px rgba(0,0,0,0.08)"
+            boxShadow: "0 14px 35px rgba(0,0,0,0.08)",
           }}
         >
           <div
@@ -758,7 +826,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               textTransform: "uppercase",
               letterSpacing: 1.3,
               color: "#999",
-              marginBottom: 6
+              marginBottom: 6,
             }}
           >
             Configuration summary
@@ -768,7 +836,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               display: "flex",
               gap: 10,
               alignItems: "center",
-              marginBottom: 10
+              marginBottom: 10,
             }}
           >
             <div
@@ -779,7 +847,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 overflow: "hidden",
                 background: "#f0f0f0",
                 border: "1px solid #e2e2e2",
-                flexShrink: 0
+                flexShrink: 0,
               }}
             >
               <img
@@ -788,7 +856,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover"
+                  objectFit: "cover",
                 }}
               />
             </div>
@@ -808,13 +876,14 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               color: "#666",
               display: "grid",
               gridTemplateColumns: "1fr auto",
-              rowGap: 2
+              rowGap: 2,
+              columnGap: 8,
             }}
           >
             <span>Base machine</span>
-            <span>₹{product.basePrice.toLocaleString("en-IN")}</span>
+            <span>{formatEuro(product.basePrice)}</span>
             <span>Optional equipment</span>
-            <span>₹{optionsTotal.toLocaleString("en-IN")}</span>
+            <span>{formatEuro(optionsTotal)}</span>
             <span style={{ fontWeight: 600, marginTop: 4 }}>
               Total list price
             </span>
@@ -822,10 +891,10 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               style={{
                 fontWeight: 700,
                 marginTop: 4,
-                color: "#0b5b1e"
+                color: "#0b5b1e",
               }}
             >
-              ₹{totalPrice.toLocaleString("en-IN")}
+              {formatEuro(totalPrice)}
             </span>
           </div>
 
@@ -834,7 +903,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               marginTop: 12,
               display: "flex",
               flexDirection: "column",
-              gap: 6
+              gap: 6,
             }}
           >
             <button
@@ -848,7 +917,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 color: "#fff",
                 fontSize: 13,
                 fontWeight: 600,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Save configuration
@@ -863,7 +932,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 color: "#222",
                 fontSize: 13,
                 fontWeight: 500,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Generate code
@@ -878,10 +947,26 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 color: "#222",
                 fontSize: 13,
                 fontWeight: 500,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Create PDF
+            </button>
+            {/* Place Order: white button, same family as Generate/Create */}
+            <button
+              type="button"
+              style={{
+                borderRadius: 999,
+                border: "1px solid #d0d0d0",
+                padding: "8px 14px",
+                background: "#ffffff",
+                color: "#222",
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              Place order
             </button>
           </div>
         </div>
@@ -892,27 +977,25 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
             borderRadius: 18,
             padding: 16,
             background: "#ffffff",
-            border: "1px solid #e4e4e4"
+            border: "1px solid #e4e4e4",
           }}
         >
           <div
             style={{
               fontSize: 13,
               fontWeight: 600,
-              marginBottom: 8
+              marginBottom: 8,
             }}
           >
             Selected configuration
           </div>
-
-          {/* 2-column grid so label + value never overlap */}
-          <div
+          <ul
             style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
               fontSize: 12,
-              lineHeight: "18px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 6
+              lineHeight: 1.7,
             }}
           >
             {product.optionGroups.map((group) => {
@@ -921,40 +1004,41 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 return o.id === optId;
               });
               if (!opt) return null;
-
               return (
-                <div
+                <li
                   key={group.id}
                   style={{
+                    marginBottom: 6,
                     display: "grid",
-                    gridTemplateColumns: "170px minmax(0, 1fr)", // label column + flexible value
-                    columnGap: 8,
-                    rowGap: 2
+                    gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1.4fr)",
+                    columnGap: 6,
+                    alignItems: "flex-start",
                   }}
                 >
                   <span
                     style={{
                       fontWeight: 600,
-                      color: "#444"
+                      color: "#444",
+                      paddingRight: 4,
+                      wordBreak: "break-word",
                     }}
                   >
                     {group.label}:
                   </span>
                   <span
                     style={{
-                      color: "#111"
+                      color: "#111",
+                      wordBreak: "break-word",
                     }}
                   >
                     {opt.label}
                   </span>
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
 
-        
-       
         {/* Load from code */}
         <div
           style={{
@@ -962,7 +1046,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
             padding: 16,
             background: "#ffffff",
             border: "1px solid #e4e4e4",
-            fontSize: 12
+            fontSize: 12,
           }}
         >
           <div style={{ fontWeight: 600, marginBottom: 8 }}>
@@ -985,7 +1069,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               color: "#111111",
               border: "1px solid #d0d0d0",
               outline: "none",
-              boxShadow: "none"
+              boxShadow: "none",
             }}
           />
           <button
@@ -1000,7 +1084,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               textAlign: "center",
               width: "100%",
               fontSize: 12,
-              fontWeight: 500
+              fontWeight: 500,
             }}
           >
             Load from code
@@ -1010,7 +1094,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               style={{
                 marginTop: 6,
                 color: "#c62828",
-                fontSize: 11
+                fontSize: 11,
               }}
             >
               {loadError}
@@ -1026,7 +1110,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
               padding: 12,
               background: "#ffffff",
               border: "1px solid #e4e4e4",
-              fontSize: 11
+              fontSize: 11,
             }}
           >
             {savedConfigJson && (
@@ -1041,7 +1125,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                     margin: 0,
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-all",
-                    color: "#333"
+                    color: "#333",
                   }}
                 >
                   {savedConfigJson}
@@ -1059,7 +1143,7 @@ export const ProductConfigurator: FC<Props> = ({ product }) => {
                 <div
                   style={{
                     wordBreak: "break-all",
-                    color: "#333"
+                    color: "#333",
                   }}
                 >
                   {shareCode}

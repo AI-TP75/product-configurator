@@ -16,35 +16,36 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        background: "#f5f5f5"
+        background: "#f5f5f5",
       }}
     >
       {/* Title + subtitle */}
       <header
         style={{
           textAlign: "center",
-          marginBottom: 40
+          marginBottom: 40,
         }}
       >
         <h1
           style={{
-            fontSize: 28,
+            fontSize: 32,          // increased from 28
             fontWeight: 600,
-            marginBottom: 8,
-            letterSpacing: 0.02
+            marginBottom: 10,      // slightly more space
+            letterSpacing: 0.02,
+            color: "#111",         // darker for better contrast
           }}
         >
           The Machine Configurator
         </h1>
         <p
           style={{
-            fontSize: 14,
-            color: "#555",
+            fontSize: 16,          // increased from 14
+            color: "#333",         // darker, more legible
             maxWidth: 520,
-            margin: "0 auto"
+            margin: "0 auto",
           }}
         >
-          Build and price a machine that is the right fit for your farm.
+          Build and estimate the machine that suits your farm best.
         </p>
       </header>
 
@@ -55,7 +56,7 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
           gridTemplateColumns: "repeat(2, minmax(260px, 320px))",
           gap: 40,
           alignItems: "flex-start",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         {families.map((family) => {
@@ -77,10 +78,10 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
                 background: "transparent",
                 padding: 0,
                 cursor: isEnabled ? "pointer" : "default",
-                textAlign: "center"
+                textAlign: "center",
               }}
             >
-              {/* Big clean image, no card border */}
+              {/* Big clean image, unified aspect ratio */}
               <div
                 style={{
                   width: 320,
@@ -88,34 +89,33 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
                   margin: "0 auto 12px",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  borderRadius: 12,
+                  background: "#fff",
+                  border: "1px solid #e5e5e5",
                 }}
               >
-                
                 <img
-                    src={family.image}
-                    alt={family.label}
-                    style={{
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        objectFit: "contain",
-                        // always colour – no grayscale
-                        filter: "none",
-                        // dim only if disabled
-                        opacity: isEnabled ? 1 : 0.55,
-                        // default position
-                        transform: "translateY(0)",
-                        // 🔥 single transition property
-                        transition: "transform 140ms ease, opacity 140ms ease"
-                    }}
-                    onMouseOver={(e) => {
-                        if (!isEnabled) return;
-                        e.currentTarget.style.transform = "translateY(-4px)";
-                    }}
-                    onMouseOut={(e) => {
-                        if (!isEnabled) return;
-                        e.currentTarget.style.transform = "translateY(0)";
-                    }}
+                  src={family.image}
+                  alt={family.label}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    // removed greying for disabled tiles
+                    filter: "none",
+                    opacity: 1,
+                    transition: "transform 140ms ease, opacity 140ms ease",
+                  }}
+                  onMouseOver={(e) => {
+                    if (!isEnabled) return;
+                    e.currentTarget.style.transform = "scale(1.03)";
+                  }}
+                  onMouseOut={(e) => {
+                    if (!isEnabled) return;
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
                 />
               </div>
 
@@ -126,7 +126,7 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
                     fontSize: 16,
                     fontWeight: 500,
                     marginBottom: 4,
-                    color: "#111"
+                    color: "#111",
                   }}
                 >
                   {family.label}
@@ -137,7 +137,7 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
                     fontSize: 13,
                     color: "#666",
                     maxWidth: 290,
-                    margin: "0 auto 6px"
+                    margin: "0 auto 6px",
                   }}
                 >
                   {family.description}
@@ -149,7 +149,7 @@ export const FamilyLanding: FC<Props> = ({ families, onSelectFamily }) => {
                       fontSize: 11,
                       letterSpacing: 1.2,
                       textTransform: "uppercase",
-                      color: "#aaa"
+                      color: "#aaa",
                     }}
                   >
                     Coming soon
